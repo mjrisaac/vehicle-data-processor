@@ -13,14 +13,7 @@ class Validator
     end
   end
 
-  private
-
   def validate_vehicle(vehicle:)
-    # binding.pry
-    valid_vrn?(vrn: vehicle['vrn'])
-  end
-
-  def valid_vrn?(vrn:)
-    vrn.match?(/^([A-Z]{2}\d{2}\s?[A-Z]{3})$/i)
+    /^(?<vrn>[A-Z]{2}\d{2}\s?[A-Z]{3})$/i =~ vehicle['vrn']
   end
 end
