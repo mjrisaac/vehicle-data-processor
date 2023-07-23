@@ -2,10 +2,15 @@
 
 require 'csv'
 require 'pry'
-require_relative '../lib/validator'
+require_relative '../lib/errors'
+require_relative '../lib/vehicle'
 
-data_table = CSV.parse(File.read('vehicle-data/vehicles.csv'), headers: true)
+VEHICLES_CSV = 'vehicle-data/vehicles.csv'
 
-validator = Validator.new(vehicle_data: data_table)
-
-validator.validate_data
+if File.exist?(VEHICLES_CSV)
+  CSV.foreach(VEHICLES_CSV, headers: true) do |row|
+    vehicle = Vehicle.new(vrn: row['vrn'], make: row['make'], colour: row['colour'])
+  end
+else
+  raise MissingCSV, "CSV file 'vehicles.csv' not found in 'vehicle-data' folder"
+end
