@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
+# Class to create a vehicle object with formatted attributes
 class Vehicle
-  EARLIEST_VALID_DATE = Date.parse('01/01/1900')
+  attr_reader :vrn, :make, :colour, :date_of_manufacture
 
   def initialize(vrn:, make:, colour:, date_of_manufacture:)
     self.vrn = vrn
@@ -11,37 +12,30 @@ class Vehicle
   end
 
   def vrn=(vrn)
-    vrn.match(/(^[A-Z]{2}\d{2} ?[A-Z]{3}$)/i)
-    @vrn = $1
+    @vrn = if vrn.length == 7
+             vrn.upcase.insert(4, ' ')
+           else
+             vrn.upcase
+           end
   end
 
   def make=(make)
-    make.match(/(^BMW|AUDI|VW|MERCEDES$)/i)
-    @make = $1
+    @make = if make.match?(/^BMW|VW/i)
+              make.upcase
+            else
+              make.capitalize
+            end
   end
 
   def colour=(colour)
-    colour.match(/(^WHITE|BLACK|RED|BLUE$)/i)
-    @colour = $1
+    @colour = colour.capitalize
   end
 
   def date_of_manufacture=(date_of_manufacture)
-    matched_data = date_of_manufacture.match(/(?<date>^0?\d{1,2}[-\/]0?\d{1,2}[-\/]\d{4}$)/)
-
-    valid_date = if matched_data
-                   date = Date.parse(matched_data['date']) rescue Date::Error(false)
-
-                   if date >= EARLIEST_VALID_DATE && date <= Date.today
-                     true
-                   else
-                     false
-                   end
-                 end
-
-    @date_of_manufacture = valid_date ? matched_data['date'] : nil
+    @date_of_manufacture = Date.parse(date_of_manufacture).strftime('%a, %d %B %Y')
   end
 
-  def to_h
-    { 'vrn' => @vrn, 'make' => @make, 'colour' => @colour, 'dateOfManufacture' => @date_of_manufacture }
+  def to_a
+    [@vrn, @make, @colour, @date_of_manufacture]
   end
 end
