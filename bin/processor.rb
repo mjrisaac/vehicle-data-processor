@@ -14,11 +14,13 @@ MAKE = 'make'
 COLOUR = 'colour'
 DATE_OF_MANUFACTURE = 'dateOfManufacture'
 VEHICLE_ATTRIBUTES = %w[vrn make colour dateOfManufacture].freeze
-CSV_TO_CREATE = 'vehicle_data/valid_vehicles.csv'
+CREATED_CSV_DESTINATION = 'vehicle_data'
+CREATED_CSV_NAME = 'valid_vehicles.csv'
 HEADERS = ['VRN', 'Make', 'Colour', 'Date of Manufacture'].freeze
 LOG = Logger.new($stdout)
 LOG.formatter = proc { |severity, datetime, _progname, msg| "[#{datetime}  #{severity}  VehiclesProcessor] -- #{msg}\n" }
 
+# Namespace for the vehicle data processor.
 module VehicleDataProcessor
   raise MissingCSV, "CSV file 'vehicles.csv' not found in 'vehicle_data' folder" unless File.exist?(VEHICLES_CSV)
 
@@ -50,22 +52,21 @@ module VehicleDataProcessor
     end
   end
 
-  Csv.create_csv(file_name: CSV_TO_CREATE, headers: HEADERS, rows: valid_vehicles)
+  Csv.create_csv(directory: CREATED_CSV_DESTINATION, file_name: CREATED_CSV_NAME, headers: HEADERS, rows: valid_vehicles)
 
-  total_vehicles = valid_vehicles.count + invalid_vehicles.count
   total_valid_vehicles = valid_vehicles.count
   total_invalid_vehicles = invalid_vehicles.count
 
-  LOG.info("        TOTAL VEHICLES: #{total_vehicles}")
+  LOG.info('Vehicle data processing report:')
+  LOG.info("        TOTAL VEHICLES: #{total_valid_vehicles + total_invalid_vehicles}")
 
   if total_invalid_vehicles.positive?
     totals = invalid_vehicles.tally
     sorted_totals = totals.sort.to_h
 
     sorted_totals.each { |k, v| LOG.info("  Vehicles with invalid #{k}: #{v}") }
-
-    LOG.info("TOTAL INVALID VEHICLES: #{total_invalid_vehicles}")
   end
 
+  LOG.info("TOTAL INVALID VEHICLES: #{total_invalid_vehicles}")
   LOG.info("  TOTAL VALID VEHICLES: #{total_valid_vehicles}")
 end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Class to create a vehicle object with formatted attributes
+# Class to create a vehicle object with formatted attributes.
 class Vehicle
   attr_reader :vrn, :make, :colour, :date_of_manufacture
 

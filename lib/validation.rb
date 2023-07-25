@@ -1,40 +1,55 @@
 # frozen_string_literal: true
 
-# methods for validation
+# Namespace for validation methods.
 module Validation
   EARLIEST_VALID_DATE = Date.parse('01/01/1900')
   CURRENT_DATE = Date.today
 
+  # Validates data meets criteria for VRN format.
+  #   Criteria: 'LLDD LLL' or 'LLDDLLL'. Space is
+  #   optional.
+  # @param vrn [String] the data to be validated.
+  # @return [String, nil] captured pattern if
+  #   data matches regex, nil if no match.
   def self.validate_vrn(vrn)
-    raise VehicleAttributeIsNotString, 'Invalid vrn' unless vrn.is_a?(String)
-
     vrn.match(/(^[A-Z]{2}\d{2} ?[A-Z]{3}$)/i)
     ::Regexp.last_match(1)
   end
 
+  # Validates data meets criteria for vehicle make.
+  #   Criteria: 'BMW', 'AUDI', 'VW' or 'MERCEDES'.
+  #   Case insensitive.
+  # @param make [String] the data to be validated.
+  # @return [String, nil] captured pattern if data
+  #   matches regex, nil if no match.
   def self.validate_make(make)
-    raise VehicleAttributeIsNotString, 'Invalid make' unless make.is_a?(String)
-
     make.match(/(^BMW|AUDI|VW|MERCEDES$)/i)
     ::Regexp.last_match(1)
   end
 
+  # Validates data meets criteria for vehicle colour.
+  #   Criteria: 'WHITE', 'BLACK', 'RED' or 'WHITE'.
+  #   Case insensitive.
+  # @param colour [String] the data to be validated.
+  # @return [String, nil] captured patter if data
+  #   matches regex, nil if no match.
   def self.validate_colour(colour)
-    raise VehicleAttributeIsNotString, 'Invalid colour' unless colour.is_a?(String)
-
     colour.match(/(^WHITE|BLACK|RED|BLUE$)/i)
     ::Regexp.last_match(1)
   end
 
+  # Validates data meets criteria for vehicle date of
+  #   manufacture. Criteria: DD-MM-YYY or DD/MM/YYYY.
+  #   Leading zero for day and month is optional.
+  #   Must be date between 01/01/1900 and current date.
+  # @param vrn [String] the data to be validated.
+  # @return [String, nil] date passed in if date is
+  #   valid, nil if invalid.
   def self.validate_date_of_manufacture(date_of_manufacture)
-    raise VehicleAttributeIsNotString, 'Invalid date of manufacture' unless date_of_manufacture.is_a?(String)
+    date = Date.parse(date_of_manufacture.to_s)
 
-    begin
-      date = Date.parse(date_of_manufacture)
-
-      date >= EARLIEST_VALID_DATE && date <= CURRENT_DATE ? date_of_manufacture : nil
-    rescue Date::Error
-      nil
-    end
+    date >= EARLIEST_VALID_DATE && date <= CURRENT_DATE ? date_of_manufacture : nil
+  rescue Date::Error
+    nil
   end
 end
