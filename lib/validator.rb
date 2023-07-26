@@ -23,7 +23,7 @@ class Validator
   # @return [String, nil] captured pattern if data
   #   matches regex, nil if no match.
   def validate_make(make)
-    make.match(/(^BMW|AUDI|VW|MERCEDES$)/i)
+    make.match(/(^BMW$|^AUDI$|^VW$|^MERCEDES$)/i)
     ::Regexp.last_match(1)
   end
 
@@ -34,7 +34,7 @@ class Validator
   # @return [String, nil] captured pattern if data
   #   matches regex, nil if no match.
   def validate_colour(colour)
-    colour.match(/(^WHITE|BLACK|RED|BLUE$)/i)
+    colour.match(/(^WHITE$|^BLACK$|^RED$|^BLUE$)/i)
     ::Regexp.last_match(1)
   end
 
