@@ -3,10 +3,6 @@
 require_relative '../lib/vehicle'
 
 RSpec.describe Vehicle do
-  it 'creates an object of the Vehicle class on initialisation' do
-    expect(Vehicle.new(vrn: 'AB12XYZ', make: 'bMw', colour: 'bLuE', date_of_manufacture: '09/11/1996').class).to eq(Vehicle)
-  end
-
   it 'formats keyword arguments on initialisation' do
     vehicle = Vehicle.new(vrn: 'br54slp', make: 'vw', colour: 'WhitE', date_of_manufacture: '01/07/2000')
 
