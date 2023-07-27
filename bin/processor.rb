@@ -9,12 +9,13 @@ require_relative '../lib/validation_helper'
 require_relative '../lib/validator'
 require_relative '../lib/vehicle'
 
-VEHICLES_CSV = 'vehicle_data/vehicles.csv'
+CSV_TO_PARSE_DIRECTORY = 'vehicle_data'
+CSV_TO_PARSE_NAME = 'vehicles.csv'
 VRN = 'vrn'
 MAKE = 'make'
 COLOUR = 'colour'
 DATE_OF_MANUFACTURE = 'dateOfManufacture'
-CREATED_CSV_DESTINATION = 'vehicle_data'
+CREATED_CSV_DIRECTORY = 'vehicle_data'
 CREATED_CSV_NAME = 'valid_vehicles.csv'
 HEADERS = ['VRN', 'Make', 'Colour', 'Date of Manufacture'].freeze
 LOG = Logger.new($stdout)
@@ -22,14 +23,14 @@ LOG.formatter = proc { |severity, datetime, _progname, msg| "[#{datetime}  #{sev
 
 # Namespace for the vehicle data processor.
 module VehicleDataProcessor
-  raise MissingCSV, "CSV file 'vehicles.csv' not found in 'vehicle_data' folder" unless File.exist?(VEHICLES_CSV)
+  Csv.csv_present_with_contents(directory: CSV_TO_PARSE_DIRECTORY, file_name: CSV_TO_PARSE_NAME)
 
-  raise EmptyCSV, "CSV file 'vehicles.csv' cannot be empty" if File.empty?(VEHICLES_CSV)
+  csv_to_parse = "#{CSV_TO_PARSE_DIRECTORY}/#{CSV_TO_PARSE_NAME}"
 
   valid_vehicles = []
   invalid_vehicles = []
 
-  CSV.foreach(VEHICLES_CSV, headers: true) do |row|
+  CSV.foreach(csv_to_parse, headers: true) do |row|
     # Validates each attribute of the vehicle in the CSV row to create Hash of validated data.
     validated_vehicle_data = Validation.validate_vehicle_data_in_row(row: row.to_h)
 
@@ -51,7 +52,7 @@ module VehicleDataProcessor
   end
 
   # Creates CSV for valid vehicles.
-  Csv.create_csv(directory: CREATED_CSV_DESTINATION, file_name: CREATED_CSV_NAME, headers: HEADERS, rows: valid_vehicles)
+  Csv.create_csv(directory: CREATED_CSV_DIRECTORY, file_name: CREATED_CSV_NAME, headers: HEADERS, rows: valid_vehicles)
 
   total_valid_vehicles = valid_vehicles.count
   total_invalid_vehicles = invalid_vehicles.count

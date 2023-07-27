@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative '../lib/validator'
-
 RSpec.describe Validator do
   it 'returns a captured pattern when VRN argument is valid' do
     expect(Validator.new.validate_vrn('cE11baz')).to eq('cE11baz')

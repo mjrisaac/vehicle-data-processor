@@ -2,6 +2,20 @@
 
 # Namespace for method to create a CSV.
 module Csv
+  # Checks a CSV file exists and is not empty.
+  # @param directory [String] directory where CSV is located.
+  # @param file_name [String] name of the CSV file.
+  # @raise [MissingCSV] if CSV does not exist.
+  # @raise [EmptyCSV] if CSV is empty.
+  # @return [nil] if file exists and is not empty.
+  def self.csv_present_with_contents(directory:, file_name:)
+    file_location = "#{directory}/#{file_name}"
+
+    raise MissingCSV, "CSV file 'vehicles.csv' not found in 'vehicle_data' folder" unless File.exist?(file_location)
+
+    raise EmptyCSV, "CSV file 'vehicles.csv' cannot be empty" if File.empty?(file_location)
+  end
+
   # Creates a CSV.
   # @param directory [String] directory for the CSV to
   #   be created in.

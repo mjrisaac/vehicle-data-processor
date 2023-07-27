@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative '../lib/vehicle'
-
 RSpec.describe Vehicle do
   it 'formats keyword arguments on initialisation' do
     vehicle = Vehicle.new(vrn: 'br54slp', make: 'vw', colour: 'WhitE', date_of_manufacture: '01/07/2000')

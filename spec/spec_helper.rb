@@ -3,6 +3,13 @@
 require 'csv'
 require 'logger'
 require 'pry'
+require_relative '../lib/csv_helper'
+require_relative '../lib/errors'
+require_relative '../lib/validation_helper'
+require_relative '../lib/validator'
+require_relative '../lib/vehicle'
+
+LOG = Logger.new($stdout)
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
